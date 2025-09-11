@@ -1,0 +1,6 @@
+[licenses]
+allow = ['GPL-2.0-or-later']
+
+[sources]
+unknown-git = "deny"
+unknown-registry = "deny"

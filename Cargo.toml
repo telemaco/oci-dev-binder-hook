@@ -1,0 +1,12 @@
+[package]
+name = "oci-dev-binder-hook"
+version = "0.1.0"
+edition = "2024"
+description = "OCI Device Binder Hook"
+authors = [
+    "Roberto Majadas <rmajadas@redhat.com>",
+    "Albert Esteve <aesteve@redhat.com>",
+]
+license = "GPL-2.0-or-later"
+
+[dependencies]

@@ -1,0 +1,62 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+  - repo: local
+    hooks:
+      - id: cargo-fmt
+        name: cargo fmt
+        entry: cargo fmt --all --
+        language: system
+        types: [ rust ]
+        pass_filenames: false
+      - id: cargo-clippy
+        name: cargo-clippy
+        language: system
+        types: [ file, rust ]
+        entry: cargo clippy --all -- -D warnings
+        pass_filenames: false
+      - id: conventional-commit-msg-validation
+        name: commit message conventional validation
+        language: pygrep
+        entry: '^(breaking|build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|squash|fixup){1}(\([\w\-\.]+\))?(!)?: ([\w `])+([\s\S]*)'
+        args: [ --multiline, --negate ]
+        stages: [ commit-msg ]
+      - id: commit-msg-needs-to-be-signed-off
+        name: commit message needs to be signed off
+        language: pygrep
+        entry: "^Signed-off-by:"
+        args: [ --multiline, --negate ]
+        stages: [ commit-msg ]
+      - id: cargo-sort
+        name: Check Cargo.toml is sorted
+        description: Ensure Cargo.toml is sorted
+        entry: bash -c 'cargo sort --workspace'
+        language: rust
+        files: Cargo\.toml
+        pass_filenames: false
+      - id: cargo-machete
+        name: cargo machete
+        description: Find unused dependencies in Cargo.toml
+        entry: cargo machete
+        language: system
+        types: [ rust ]
+        pass_filenames: false
+      - id: cargo-deny
+        name: cargo deny check
+        description: Check dependencies for license/security issues
+        entry: cargo deny check
+        language: system
+        types: [ rust ]
+        pass_filenames: false
+      - id: unit tests
+        stages: [ pre-push ]
+        name: unit tests
+        language: system
+        types: [ file, rust ]
+        entry: cargo nextest run --workspace
+        pass_filenames: false
