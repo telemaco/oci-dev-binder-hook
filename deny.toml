@@ -1,5 +1,5 @@
 [licenses]
-allow = ['GPL-2.0-or-later']
+allow = ['GPL-2.0-or-later', 'MIT', 'Apache-2.0', 'Unicode-3.0', 'Zlib']
 
 [sources]
 unknown-git = "deny"
