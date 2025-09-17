@@ -1,0 +1,15 @@
+{
+    "version": "1.0.0",
+    "hook": {
+        "path": "@oci-hooks-bindir@/oci-dev-binder-hook"
+    },
+    "when": {
+        "annotations": {
+            "^org\\.containers\\.device\\..*$": "^.*$",
+            "^org\\.containers\\.logind\\.seat": "^.*$"
+        }
+    },
+    "stages": [
+        "precreate"
+    ]
+}
