@@ -9,6 +9,25 @@ To build the project, run the following command:
 cargo build
 ```
 
+### Building with Meson
+
+It is also possible to build the project using Meson. This is useful for packagers and developers who want to integrate the project with other Meson-based projects.
+
+First, ensure you have Meson installed. You can find installation instructions on the [Meson website](https://mesonbuild.com/Getting-meson.html).
+
+Once you have Meson installed, you can build the project using the following commands:
+
+```bash
+meson setup build --prefix=/usr
+meson compile -C build
+```
+
+To install the project, you can use the following command:
+
+```bash
+meson install -C build
+```
+
 ## Testing
 
 To run the test suite, use the following command:
