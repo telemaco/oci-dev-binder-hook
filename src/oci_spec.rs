@@ -21,14 +21,14 @@ impl RuntimeSpecExt for RuntimeSpec {
 }
 
 pub trait RuntimeSpecUdev {
-    fn add_udev_device(self, device: Device) -> Result<RuntimeSpec, Box<dyn Error>>;
+    fn add_udev_device(&mut self, device: Device) -> Result<(), Box<dyn Error>>;
 }
 
 impl RuntimeSpecUdev for RuntimeSpec {
-    fn add_udev_device(mut self, device: Device) -> Result<RuntimeSpec, Box<dyn Error>> {
+    fn add_udev_device(&mut self, device: Device) -> Result<(), Box<dyn Error>> {
         let udev_path = match device.devnode() {
             Some(path) => path,
-            None => return Ok(self),
+            None => return Ok(()),
         };
 
         let linux = self.linux_mut().get_or_insert_with(Default::default);
@@ -36,7 +36,7 @@ impl RuntimeSpecUdev for RuntimeSpec {
 
         // Check if device is already in the list and return early if exists
         if devices.iter().any(|d| d.path() == udev_path) {
-            return Ok(self);
+            return Ok(());
         };
 
         let major: i64 = device
@@ -61,7 +61,7 @@ impl RuntimeSpecUdev for RuntimeSpec {
             LinuxDeviceType::P
         } else {
             eprintln!("Unsupported device type for {}", udev_path.display());
-            return Ok(self);
+            return Ok(());
         };
 
         let new_device = LinuxDeviceBuilder::default()
@@ -88,6 +88,6 @@ impl RuntimeSpecUdev for RuntimeSpec {
         let cgroup_devices = resources.devices_mut().get_or_insert_with(Default::default);
         cgroup_devices.push(new_device_cgroup);
 
-        Ok(self)
+        Ok(())
     }
 }
