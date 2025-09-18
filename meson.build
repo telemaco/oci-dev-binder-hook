@@ -1,6 +1,6 @@
 project('oci-dev-binder-hook', 'rust',
         version: '0.1.0',
-        meson_version: '>= 0.60',
+        meson_version: '>= 0.62',
         license: 'GPL-2.0-or-later'
 )
 
