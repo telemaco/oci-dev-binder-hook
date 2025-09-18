@@ -36,25 +36,40 @@ impl CLIExt for CLI {
             }
         };
 
-        let mut enumerator = udev::Enumerator::new()?;
-        for device in enumerator.scan_devices()? {
-            if device.devnode().is_some()
-                && device
-                    .property_value("TAGS")
-                    .and_then(|tags| tags.to_str())
-                    .is_some_and(|tags_str| {
-                        tags_str
-                            .trim_matches(':')
-                            .split(':')
-                            .any(|tag| tag == "seat")
-                    })
-            {
-                spec = spec.add_udev_device(device)?;
+        let seat = if let Some(annotations) = spec.annotations() {
+            annotations.get("io.dev-binder.udev.seat").cloned()
+        } else {
+            None
+        };
+
+        if seat.is_some() {
+            let mut enumerator = udev::Enumerator::new()?;
+            if let Some(seat_id) = &seat {
+                enumerator.match_tag("seat")?;
+                if seat_id != "seat0" {
+                    enumerator.match_tag(seat_id)?;
+                }
+            }
+
+            for device in enumerator.scan_devices()? {
+                // In udev, a device is assigned to seat0 if it has the property
+                // ID_SEAT=seat0 or if it has no ID_SEAT property at all.
+                // if seat_id is seat0 we'd want to skip devices that don't follow this rule.
+                // for more info: https://www.freedesktop.org/wiki/Software/systemd/multiseat/
+                if device.devnode().is_some() {
+                    if let Some(seat_id) = &seat
+                        && seat_id == "seat0"
+                        && let Some(device_seat_id) = device.property_value("ID_SEAT")
+                        && seat_id.as_str() != device_seat_id
+                    {
+                        continue;
+                    };
+
+                    spec.add_udev_device(device)?
+                }
             }
         }
-
         println!("{}", spec.to_string()?);
-
         Ok(())
     }
 }
