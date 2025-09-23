@@ -1,6 +1,34 @@
 # oci-dev-binder-hook
 The OCI Device Binder is a generic OCI runtime hook that can be used with any container runtime that supports OCI hooks. It provides dynamic device access management based on container annotations.
 
+## Usage
+
+The `oci-dev-binder-hook` can be used to enrich a container's available devices by using OCI annotations.
+
+### With Quadlets
+
+For example, you can use a quadlet file for `podman` to inject all the devices that belongs to a given seat.
+
+To do so, you can create a file `/etc/containers/systemd/mycontainer.container` with the following content:
+
+```
+[Container]
+Image=<image>
+Annotation=io.dev-binder.udev.seat=seat0
+```
+
+Then, when you run a container by enabling the `mycontainer.service` systemd unit, the hook will inject all the devices that belongs to the `seat0` seat into the container.
+
+### With Podman CLI
+
+Alternatively, you can achieve the same result using the `podman` command-line interface directly:
+
+```bash
+podman run --annotation io.dev-binder.udev.seat=seat0 -it <image>
+```
+
+This command will trigger the hook, which will then inject all the devices associated with the `seat0` seat into the container.
+
 ## Building
 
 To build the project, run the following command:
