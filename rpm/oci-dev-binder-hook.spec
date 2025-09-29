@@ -1,0 +1,75 @@
+%bcond_without check
+
+%if 0%{?rhel}
+%global bundled_rust_deps 1
+%else
+%global bundled_rust_deps 0
+%endif
+
+Name:           oci-dev-binder-hook
+Version:        0.1.0
+Release:        %autorelease
+Summary:        OCI Device Binder Hook
+
+License:        GPL-2.0-or-later
+Source:         %{name}-%{version}.tar.xz
+
+BuildRequires:  meson
+BuildRequires:  rust
+BuildRequires:  pkgconfig(udev)
+%if 0%{?bundled_rust_deps}
+BuildRequires:  rust-toolset
+%else
+BuildRequires:  cargo-rpm-macros
+%endif
+
+%description
+OCI Device Binder Hook.
+
+%prep
+%if ! 0%{?bundled_rust_deps}
+# use packaged Rust dependencies
+%autosetup -p1 -n %{name}-%{version}
+%cargo_prep
+%else
+# use vendored Rust dependencies
+%autosetup -N -n %{name}-%{version} -a1
+%cargo_prep -v vendor
+%endif
+
+%if ! 0%{?bundled_rust_deps}
+%generate_buildrequires
+%cargo_generate_buildrequires
+%endif
+
+%build
+%meson
+%meson_build
+
+%cargo_license_summary
+%{cargo_license} > LICENSE.dependencies
+%if 0%{?bundled_rust_deps}
+%cargo_vendor_manifest
+%endif
+
+%install
+%meson_install
+
+%if %{with check}
+%check
+%meson_test
+%endif
+
+%files
+%license LICENSE
+%license LICENSE.dependencies
+%if 0%{?bundled_rust_deps}
+%license cargo-vendor.txt
+%endif
+%doc README.md
+%doc meson_options.txt
+%{_libexecdir}/oci/hooks.d/oci-dev-binder-hook
+%{_datadir}/containers/oci/hooks.d/oci-dev-binder-hook.json
+
+%changelog
+%autochangelog
