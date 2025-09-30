@@ -27,6 +27,10 @@ oci_dev_binder_hook_sources = files (
 subdir('src')
 subdir('data')
 
+if get_option('build_rpm_spec')
+    subdir('rpm')
+endif
+
 summary({
   'Hook binary': oci_hooks_bindir / 'oci-dev-binder-hook',
   'Hook configuration': oci_hooks_datadir / 'oci-dev-binder-hook.json',
