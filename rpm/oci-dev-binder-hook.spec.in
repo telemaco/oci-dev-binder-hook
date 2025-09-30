@@ -7,12 +7,12 @@
 %endif
 
 Name:           oci-dev-binder-hook
-Version:        0.1.0
-Release:        %autorelease
+Version:        @VERSION@
+Release:        1@DEV_VERSION@%{?dist}
 Summary:        OCI Device Binder Hook
 
 License:        GPL-2.0-or-later
-Source:         %{name}-%{version}.tar.xz
+Source:         %{name}-%{version}@DEV_VERSION@.tar.xz
 
 BuildRequires:  meson
 BuildRequires:  rust
@@ -29,11 +29,11 @@ OCI Device Binder Hook.
 %prep
 %if ! 0%{?bundled_rust_deps}
 # use packaged Rust dependencies
-%autosetup -p1 -n %{name}-%{version}
+%autosetup -p1 -n %{name}-%{version}@DEV_VERSION@
 %cargo_prep
 %else
 # use vendored Rust dependencies
-%autosetup -N -n %{name}-%{version} -a1
+%autosetup -N -n %{name}-%{version}@DEV_VERSION@ -a1
 %cargo_prep -v vendor
 %endif
 

@@ -8,3 +8,4 @@ option (
   value: 'default',
   description: 'The build profile for oci-dev-binder-hook. One of "default" or "development".'
 )
+option('build_rpm_spec', type: 'boolean', value: false, description: 'Build RPM spec file')
