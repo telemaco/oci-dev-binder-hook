@@ -1,8 +1,10 @@
 project('oci-dev-binder-hook', 'rust',
-        version: '0.1.0',
-        meson_version: '>= 0.62',
+        version: run_command('tools/dist.sh', 'get-version', check: true).stdout().strip(),
+        meson_version: '>= 1.0.0',
         license: 'GPL-2.0-or-later'
 )
+
+meson.add_dist_script('tools/dist.sh', 'prepare-dist', meson.project_version())
 
 cargo = find_program('cargo')
 udev = dependency('udev', required : true)
