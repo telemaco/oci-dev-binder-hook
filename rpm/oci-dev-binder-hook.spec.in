@@ -43,7 +43,7 @@ OCI Device Binder Hook.
 %endif
 
 %build
-%meson
+%meson -Ddisable_udev_required_tests=True
 %meson_build
 
 %cargo_license_summary
