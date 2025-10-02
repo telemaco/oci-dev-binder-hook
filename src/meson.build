@@ -1,5 +1,6 @@
 cargo_options = [ '--manifest-path', meson.project_source_root() / 'Cargo.toml' ]
 cargo_options += [ '--target-dir', meson.project_build_root() / 'src' ]
+cargo_test_options = []
 
 if get_option('profile') == 'default'
   cargo_options += [ '--release' ]
@@ -8,6 +9,10 @@ if get_option('profile') == 'default'
 else
   rust_target = 'debug'
   message('Building in debug mode')
+endif
+
+if get_option('disable_udev_required_tests')
+    cargo_test_options += [ '--features', 'disable-udev-required-tests' ]
 endif
 
 custom_target(
@@ -32,7 +37,7 @@ custom_target(
 test(
   'cargo test',
   cargo,
-  args: [ 'test', cargo_options ],
+  args: [ 'test', cargo_options, cargo_test_options ],
   env: {
     'CARGO_HOME': meson.project_build_root() / 'cargo-home',
   },

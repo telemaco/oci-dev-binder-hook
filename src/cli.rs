@@ -75,6 +75,7 @@ impl CLIExt for CLI {
 }
 
 #[cfg(test)]
+#[cfg(not(feature = "disable-udev-required-tests"))]
 #[cfg_attr(coverage_nightly, coverage(off))]
 mod tests {
     use crate::cli::{CLI, CLIExt};

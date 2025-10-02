@@ -9,6 +9,9 @@ authors = [
 ]
 license = "GPL-2.0-or-later"
 
+[features]
+disable-udev-required-tests = []
+
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }
 log = "0.4"
