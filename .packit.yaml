@@ -30,3 +30,22 @@ jobs:
   targets:
     - fedora-stable
     - fedora-development
+- job: copr_build
+  trigger: commit
+  branch: main
+  owner: rmajadas
+  project: oci-dev-binder-hook-dev
+  targets:
+    - fedora-stable
+    - fedora-development
+  actions:
+    post-upstream-clone:
+      - |
+        bash -c "
+        #! /bin/bash
+        set -x
+        export USE_GIT_VERSION=true
+
+        meson setup build -Dbuild_rpm_spec=True --wipe
+        meson dist --no-tests -C build
+        "
