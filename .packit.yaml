@@ -1,0 +1,32 @@
+specfile_path: build/rpm/oci-dev-binder-hook.spec
+
+srpm_build_deps:
+  - git-core
+  - gcc
+  - meson
+  - cargo
+  - "pkgconfig(udev)"
+
+actions:
+  post-upstream-clone:
+    - |
+      bash -c "
+      #! /bin/bash
+      set -x
+
+      meson setup build -Dbuild_rpm_spec=True --wipe
+      meson dist --no-tests -C build
+      "
+  get-current-version:
+    - awk '/^Version:/ {print $2;}' build/rpm/oci-dev-binder-hook.spec
+  create-archive:
+    - bash -c 'echo build/meson-dist/oci-dev-binder-hook-*.tar.xz'
+  fix-spec-file:
+    - bash -c 'echo "No action needed"'
+
+jobs:
+- job: copr_build
+  trigger: pull_request
+  targets:
+    - fedora-stable
+    - fedora-development
