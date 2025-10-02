@@ -31,6 +31,12 @@ jobs:
   targets:
     - fedora-stable
     - fedora-development
+    - epel-9
+    - epel-10
+    - fedora-stable-aarch64
+    - fedora-development-aarch64
+    - epel-9-aarch64
+    - epel-10-aarch64
 - job: copr_build
   identifier: "copr_build_commit"
   trigger: commit
@@ -42,6 +48,12 @@ jobs:
   targets:
     - fedora-stable
     - fedora-development
+    - epel-9
+    - epel-10
+    - fedora-stable-aarch64
+    - fedora-development-aarch64
+    - epel-9-aarch64
+    - epel-10-aarch64
   actions:
     post-upstream-clone:
       - |
