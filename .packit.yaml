@@ -37,6 +37,7 @@ jobs:
   branch: main
   owner: rmajadas
   project: oci-dev-binder-hook-dev
+  update_release: false
   release_suffix: "{PACKIT_RPMSPEC_RELEASE}"
   targets:
     - fedora-stable
