@@ -26,11 +26,13 @@ actions:
 
 jobs:
 - job: copr_build
+  identifier: "copr_build_pr"
   trigger: pull_request
   targets:
     - fedora-stable
     - fedora-development
 - job: copr_build
+  identifier: "copr_build_commit"
   trigger: commit
   branch: main
   owner: rmajadas
